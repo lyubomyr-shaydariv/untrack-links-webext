@@ -283,7 +283,7 @@ const DO = (ctx) => {
 
 // `APPEND ORIGINAL QUERY ENTRIES` is very limited:
 // - query parameters cannot be transformed
-const __F__APPEND_ORIGINAL_QUERY_ENTRIES = (ctx, ...keys) => {
+const __F__APPEND_ORIGINAL_QUERY_ENTRY_KEYS = (ctx, ...keys) => {
 	ctx.source += ' APPEND ORIGINAL QUERY ENTRIES';
 	const uniqueKeys = new Set(...keys);
 	ctx.__apply_functions.push((arg) => {
@@ -448,7 +448,7 @@ const APPLY = (ctx) => {
 		return arg;
 	};
 	return {
-		APPEND_ORIGINAL_QUERY_ENTRIES: (...keys) => __F__APPEND_ORIGINAL_QUERY_ENTRIES(ctx, ...keys),
+		APPEND_ORIGINAL_QUERY_ENTRY_KEYS: (...keys) => __F__APPEND_ORIGINAL_QUERY_ENTRY_KEYS(ctx, ...keys),
 		EXECUTE_REGEXP: (regExp) => __F__EXECUTE_REGEXP(ctx, regExp),
 		FROM_BASE64: () => __F__FROM_BASE64(ctx),
 		FROM_JSON: () => __F__FROM_JSON(ctx),
@@ -507,7 +507,7 @@ const __FROM__QUERY = (ctx) => {
 const DEFAULT_PAIR_DELIMITER = '&';
 const DEFAULT_ENTRY_DELIMITER = '=';
 
-const __FROM__QUERY_ENTRIES = (ctx, pairDelimiter, entryDelimiter) => {
+const __FROM__QUERY_ENTRY_KEYS = (ctx, pairDelimiter, entryDelimiter) => {
 	pairDelimiter ||= DEFAULT_PAIR_DELIMITER;
 	entryDelimiter ||= DEFAULT_ENTRY_DELIMITER;
 	if ( pairDelimiter === DEFAULT_PAIR_DELIMITER && entryDelimiter === DEFAULT_ENTRY_DELIMITER ) {
@@ -546,7 +546,7 @@ const FROM = (ctx) => {
 	return {
 		PATHNAME: () => __FROM__PATHNAME(ctx),
 		QUERY: () => __FROM__QUERY(ctx),
-		QUERY_ENTRIES: () => __FROM__QUERY_ENTRIES(ctx)
+		QUERY_ENTRY_KEYS: () => __FROM__QUERY_ENTRY_KEYS(ctx)
 	};
 };
 
@@ -570,7 +570,7 @@ const __AT__DOMAIN = (ctx, ...domains) => {
 		AT: () => AT(ctx),
 		EXCEPT: (...domains) => __AT_DOMAIN__EXCEPT(ctx, ...domains),
 		PATHNAME: (...pathnames) => __AT__PATHNAME(ctx, ...pathnames),
-		QUERY_ENTRIES: (...keys) => __AT__QUERY_ENTRIES(ctx, ...keys),
+		QUERY_ENTRY_KEYS: (...keys) => __AT__QUERY_ENTRY_KEYS(ctx, ...keys),
 		/* eslint-disable-next-line sort-keys */
 		FROM: () => FROM(ctx)
 	};
@@ -583,7 +583,7 @@ const __AT_DOMAIN__EXCEPT = (ctx, ...domains) => {
 	return {
 		AT: () => AT(ctx),
 		PATHNAME: (...pathnames) => __AT__PATHNAME(ctx, ...pathnames),
-		QUERY_ENTRIES: (...keys) => __AT__QUERY_ENTRIES(ctx, ...keys),
+		QUERY_ENTRY_KEYS: (...keys) => __AT__QUERY_ENTRY_KEYS(ctx, ...keys),
 		/* eslint-disable-next-line sort-keys */
 		FROM: () => FROM(ctx)
 	};
@@ -596,13 +596,13 @@ const __AT__HOSTNAME = (ctx, ...hostnames) => {
 	return {
 		AT: () => AT(ctx),
 		PATHNAME: (...pathnames) => __AT__PATHNAME(ctx, ...pathnames),
-		QUERY_ENTRIES: (...keys) => __AT__QUERY_ENTRIES(ctx, ...keys),
+		QUERY_ENTRY_KEYS: (...keys) => __AT__QUERY_ENTRY_KEYS(ctx, ...keys),
 		/* eslint-disable-next-line sort-keys */
 		FROM: () => FROM(ctx)
 	};
 };
 
-const __AT__QUERY_ENTRIES = (ctx, ...literals) => {
+const __AT__QUERY_ENTRY_KEYS = (ctx, ...literals) => {
 	ctx.source += ` QUERY ENTRIES ${literalize(...literals)}`;
 	const literalGroups = groupLiterals(...literals);
 	const stringLiterals = literalGroups.get(String);
@@ -655,7 +655,7 @@ const __AT__PATHNAME = (ctx, ...pathnames) => {
 	ctx.__at_predicates.push((url) => p(url.pathname));
 	return {
 		AT: () => AT(ctx),
-		QUERY_ENTRIES: (...keys) => __AT__QUERY_ENTRIES(ctx, ...keys),
+		QUERY_ENTRY_KEYS: (...keys) => __AT__QUERY_ENTRY_KEYS(ctx, ...keys),
 		/* eslint-disable-next-line sort-keys */
 		FROM: () => FROM(ctx)
 	};
@@ -693,7 +693,7 @@ outer:
 		DOMAIN: (...domains) => __AT__DOMAIN(ctx, ...domains),
 		HOSTNAME: (...hostnames) => __AT__HOSTNAME(ctx, ...hostnames),
 		PATHNAME: (...pathnames) => __AT__PATHNAME(ctx, ...pathnames),
-		QUERY_ENTRIES: (...keys) => __AT__QUERY_ENTRIES(ctx, ...keys)
+		QUERY_ENTRY_KEYS: (...keys) => __AT__QUERY_ENTRY_KEYS(ctx, ...keys)
 	};
 };
 
